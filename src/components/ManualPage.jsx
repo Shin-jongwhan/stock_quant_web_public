@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './ManualPage.css'
 
 const BASE = import.meta.env.BASE_URL
@@ -157,6 +157,105 @@ const lsUseSteps = [
   },
 ]
 
+const lsSubscriptionSteps = [
+  {
+    img: `${BASE}images/subscription/1_subscription.jpg`,
+    sTitle: '구독 등록 안내',
+    lsDesc: [
+      '관리자가 결제를 확인하면 구독이 등록되고, 내 봇으로 구독 확인 메시지가 발송됩니다.',
+      '메시지에는 결제 금액, 이용 기간(시작일 ~ 만료일), AI 자동 등록 활성 여부가 포함됩니다.',
+      '구독 기간 중에는 등록한 종목에 대한 가격 알람 및 AI 매수 후보 알람(AI 플랜 해당)을 정상적으로 수신할 수 있습니다.',
+    ],
+  },
+  {
+    img: `${BASE}images/subscription/2_referral.jpg`,
+    sTitle: '추천인 제도',
+    lsDesc: [
+      '가입 문의 시 추천인 user_name을 함께 전달하면, 추천인에게 무료 이용 기간이 자동으로 지급됩니다.',
+      '추천인 보상은 신규 결제 유저 1인당 1회만 지급됩니다. 동일 유저가 재결제할 때는 추천인 혜택이 적용되지 않습니다.',
+      '보상 지급 시 추천인 봇으로 기존 만료일과 변경된 만료일이 안내됩니다.',
+      '추천인 보상에는 AI 자동 등록 서비스가 포함됩니다.',
+    ],
+  },
+  {
+    img: `${BASE}images/subscription/3_refund.jpg`,
+    sTitle: '환불 안내',
+    lsDesc: [
+      '환불 요청 시 환불 신청일 기준으로 일할 계산하여 잔여 금액이 환불됩니다.',
+      '사용 일수는 구독 시작일부터 환불 신청일 당일까지이며, 당일도 사용 일수에 포함됩니다.',
+      '환불 처리가 완료되면 내 봇으로 환불 금액, 사용 일수, 기존 만료일 및 변경된 만료일이 안내됩니다.',
+      '환불 후 잔여 구독 기간이 없으면 서비스 이용이 즉시 종료됩니다.',
+    ],
+  },
+  {
+    img: `${BASE}images/subscription/4_cancel_referral.jpg`,
+    sTitle: '환불 시 추천인 보상 취소',
+    lsDesc: [
+      '환불이 처리되면 해당 결제로 발생한 추천인 보상도 함께 취소됩니다.',
+      '추천인에게 지급된 무료 기간이 롤백되며, 추천인 봇으로 보상 취소 안내 메시지가 발송됩니다.',
+      '추천인에게 다른 유효한 구독 기간이 남아 있다면 해당 만료일로 자동 변경됩니다.',
+    ],
+  },
+]
+
+function CautionBox() {
+  return (
+    <div className="manual-caution">
+      <div className="manual-caution-title">⚠️ 환불 주의사항</div>
+      <ul className="manual-caution-list">
+        <li>결제 후 즉시 환불하더라도 <strong>환불 신청일 당일은 사용 일수에 포함</strong>되어 일할 계산됩니다.</li>
+        <li>환불 금액은 <strong>잔여 일수 기준으로 100원 단위 내림</strong> 계산됩니다.</li>
+        <li>예시: 30일 / 30,000원 구독권을 당일 환불하면 → 사용 1일 차감, 잔여 29일 환불<br />
+          <span className="manual-caution-formula">30,000 × 29 / 30 = 29,000원 → <strong>29,000원 환불</strong></span>
+        </li>
+        <li>추천인 보상이 지급된 상태에서 환불하면 <strong>추천인 보상도 함께 취소</strong>됩니다.</li>
+      </ul>
+    </div>
+  )
+}
+
+const sMailTemplate = `[Stock Quant 구독 문의]
+
+유저명 : shinejh0528
+구독 요청 개월 : 12 (참고용)
+입금자 성함 : 피터 린치
+추천인 : (없으면 비워두기)`
+
+function MailTemplate() {
+  const [blCopied, setBlCopied] = useState(false)
+
+  function handleCopy() {
+    navigator.clipboard.writeText(sMailTemplate)
+    setBlCopied(true)
+    setTimeout(() => setBlCopied(false), 2000)
+  }
+
+  const sMailto = `mailto:stockop123@naver.com?subject=[Stock Quant 구독 문의]&body=${encodeURIComponent(sMailTemplate)}`
+
+  return (
+    <div className="mail-template">
+      <div className="mail-template-header">
+        <h3 className="mail-template-title">📧 이메일 문의 양식</h3>
+        <p className="mail-template-note">
+          아래 양식을 복사한 뒤 빈칸을 채워 <strong>stockop123@naver.com</strong>으로 보내주세요.<br />
+          <strong>구독 요청 개월은 참고용</strong>이며, 실제 등록 개월 수는 입금액을 기준으로 산정됩니다.<br />
+          입금 확인 후 맞는 개월 수로 등록해드립니다.
+        </p>
+      </div>
+      <div className="mail-template-body">
+        <pre className="mail-template-text">{sMailTemplate}</pre>
+        <button className="mail-template-copy" onClick={handleCopy}>
+          {blCopied ? '✓ 복사됨' : '복사'}
+        </button>
+      </div>
+      <a className="mail-template-send" href={sMailto}>
+        ✉️ 메일 앱으로 바로 보내기
+      </a>
+    </div>
+  )
+}
+
+
 function StepCard({ nIdx, dicStep }) {
   const lsCode = ['/', '예시']
   return (
@@ -181,10 +280,14 @@ function StepCard({ nIdx, dicStep }) {
 }
 
 
-function ManualPage() {
-  const [sTab, setSTab] = useState('join')
+function ManualPage({ sInitTab = 'join' }) {
+  const [sTab, setSTab] = useState(sInitTab)
 
-  const lsSteps = sTab === 'join' ? lsJoinSteps : lsUseSteps
+  useEffect(() => {
+    setSTab(sInitTab)
+  }, [sInitTab])
+
+  const lsSteps = sTab === 'join' ? lsJoinSteps : sTab === 'use' ? lsUseSteps : lsSubscriptionSteps
 
   return (
     <div className="manual-page">
@@ -205,13 +308,23 @@ function ManualPage() {
           >
             봇 사용 방법
           </button>
+          <button
+            className={`manual-tab-btn ${sTab === 'subscription' ? 'active' : ''}`}
+            onClick={() => setSTab('subscription')}
+          >
+            구독 안내
+          </button>
         </div>
+
+        {sTab === 'subscription' && <CautionBox />}
 
         <div className="manual-steps">
           {lsSteps.map((dicStep, nIdx) => (
             <StepCard key={nIdx} nIdx={nIdx} dicStep={dicStep} />
           ))}
         </div>
+
+        {sTab === 'subscription' && <MailTemplate />}
       </div>
     </div>
   )

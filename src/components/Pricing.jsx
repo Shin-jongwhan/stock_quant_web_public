@@ -70,6 +70,17 @@ function Pricing({ onInquiry }) {
             </div>
           ))}
         </div>
+
+        <div className="pricing-referral">
+          <span className="pricing-referral-icon">🎁</span>
+          <div className="pricing-referral-body">
+            <strong>추천인 혜택</strong>
+            <p>
+              지인이 첫 결제를 완료하면, 추천인에게 <strong>AI 매수 후보 추천 포함 7일 무료 이용권</strong>이 자동 지급됩니다.
+              정가 기준 <strong>약 만원 상당</strong>의 혜택이며, 가입 문의 시 추천인 user_name을 함께 전달해주세요.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   )

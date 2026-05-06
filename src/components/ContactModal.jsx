@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react'
 import './ContactModal.css'
 
-const sEmail = 'stockop123@naver.com'
-
-function ContactModal({ onClose, onNavigate }) {
+function ContactModal({ onClose, onNavigate, onSubscription }) {
   const [nStep, setNStep] = useState(1)
-  const [blCopied, setBlCopied] = useState(false)
 
   useEffect(() => {
     function handleKey(e) {
@@ -14,13 +11,6 @@ function ContactModal({ onClose, onNavigate }) {
     document.addEventListener('keydown', handleKey)
     return () => document.removeEventListener('keydown', handleKey)
   }, [onClose])
-
-  function handleCopy() {
-    navigator.clipboard.writeText(sEmail).then(() => {
-      setBlCopied(true)
-      setTimeout(() => setBlCopied(false), 2000)
-    })
-  }
 
   function handleGoManual() {
     onClose()
@@ -54,20 +44,15 @@ function ContactModal({ onClose, onNavigate }) {
         ) : (
           <>
             <div className="modal-icon">✉️</div>
-            <h2 className="modal-title">가입 문의</h2>
+            <h2 className="modal-title">이메일 문의 양식 안내</h2>
             <p className="modal-desc">
-              아래 이메일로 <strong>봇 토큰과 원하는 사용자명</strong>을 함께 보내주시면<br />
-              확인 후 안내드리겠습니다.
+              메뉴얼의 <strong>구독 안내</strong> 탭에서 이메일 문의 양식과<br />
+              발송 주소를 확인할 수 있습니다.<br />
+              양식을 복사하여 빈칸을 채운 뒤 보내주세요.
             </p>
-            <div className="modal-email-box">
-              <span className="modal-email">{sEmail}</span>
-              <button className="modal-copy-btn" onClick={handleCopy}>
-                {blCopied ? '복사됨 ✓' : '복사'}
-              </button>
-            </div>
-            <a className="modal-mail-btn" href={`mailto:${sEmail}`}>
-              메일 앱으로 열기
-            </a>
+            <button className="modal-manual-btn" onClick={onSubscription}>
+              📋 이메일 문의 양식 확인하기
+            </button>
             <button className="modal-back-btn" onClick={() => setNStep(1)}>
               ← 이전으로
             </button>

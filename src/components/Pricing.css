@@ -168,8 +168,51 @@
   background: var(--color-primary-dark);
 }
 
+.pricing-referral {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  max-width: 800px;
+  margin: 32px auto 0;
+  background: linear-gradient(135deg, #f0f5ff 0%, #fff 100%);
+  border: 1.5px solid var(--color-primary);
+  border-radius: 16px;
+  padding: 24px 28px;
+}
+
+.pricing-referral-icon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pricing-referral-body strong {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-text);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.pricing-referral-body p {
+  font-size: 0.93rem;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+  margin: 0;
+}
+
+.pricing-referral-body strong + p strong {
+  color: var(--color-primary);
+}
+
 @media (max-width: 768px) {
   .pricing-grid {
     grid-template-columns: 1fr;
+  }
+
+  .pricing-referral {
+    flex-direction: column;
+    gap: 10px;
   }
 }
