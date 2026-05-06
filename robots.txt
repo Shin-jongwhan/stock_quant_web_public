@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shin-jongwhan.github.io/stock_quant_web_public/sitemap.xml
