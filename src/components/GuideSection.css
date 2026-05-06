@@ -1,0 +1,57 @@
+.guide-section {
+  background-color: var(--color-bg-section);
+}
+
+.guide-section--alt {
+  background-color: var(--color-bg);
+}
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.guide-step {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.guide-step:hover {
+  transform: translateY(-4px);
+}
+
+.guide-step img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+
+.guide-caption {
+  padding: 14px 16px;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .guide-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-step img {
+    height: 300px;
+  }
+}

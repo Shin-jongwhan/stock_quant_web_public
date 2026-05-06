@@ -1,0 +1,76 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-primary: #1a73e8;
+  --color-primary-dark: #1557b0;
+  --color-accent: #e8470a;
+  --color-bg: #ffffff;
+  --color-bg-card: #ffffff;
+  --color-bg-section: #f5f7fb;
+  --color-text: #1a1d2e;
+  --color-text-muted: #6b7280;
+  --color-border: #e2e6ef;
+  --color-highlight: #1a73e8;
+  --radius: 12px;
+  --max-width: 1100px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.app {
+  width: 100%;
+}
+
+section {
+  padding: 80px 24px;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 48px;
+  color: var(--color-text);
+}
+
+.section-title span {
+  color: var(--color-primary);
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  section {
+    padding: 60px 16px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+}
