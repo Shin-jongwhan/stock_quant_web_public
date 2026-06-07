@@ -36,8 +36,8 @@ function Hero({ onInquiry }) {
           </div>
           <div className="hero-stat-divider" />
           <div className="hero-stat">
-            <strong>1분</strong>
-            <span>실시간 모니터링 주기</span>
+            <strong>실시간</strong>
+            <span>모니터링</span>
           </div>
         </div>
       </div>
