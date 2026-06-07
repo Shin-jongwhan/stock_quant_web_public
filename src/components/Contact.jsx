@@ -8,11 +8,11 @@ function Contact({ onInquiry }) {
           <span>문의</span>
         </h2>
         <div className="contact-card">
-          <p className="contact-text">서비스 이용 문의나 가입 관련 문의는 이메일로 연락주세요.</p>
+          <p className="contact-text">베타 테스트 기간 중 모든 서비스를 무료로 이용하실 수 있습니다.<br />텔레그램 봇을 등록하시면 순차적으로 승인해 드립니다.<br />문의사항은 아래 이메일로 연락해 주세요.</p>
           <p className="contact-email">stockop123@naver.com</p>
           <p className="contact-sub">평일 오전 9시 ~ 오후 6시 응답</p>
           <button className="contact-btn" onClick={onInquiry}>
-            문의하기
+            베타 참여 신청하기
           </button>
         </div>
       </div>

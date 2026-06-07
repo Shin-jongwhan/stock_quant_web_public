@@ -17,12 +17,12 @@ function Hero({ onInquiry }) {
         </p>
         <div className="hero-cta-group">
           <button className="cta-button" onClick={onInquiry}>
-            가입 문의하기 →
+            베타 참여 신청하기 →
           </button>
         </div>
         <p className="hero-cta-note">
-          현재 사업 검증 단계로, 결제 시스템은 서비스가 커지면 연동할 계획입니다.<br />
-          가입 문의는 메일로 받고 있습니다.
+          현재 베타 테스트 기간으로 모든 서비스를 무료로 이용하실 수 있습니다.<br />
+          텔레그램 봇을 등록하시면 순차적으로 승인해 드립니다.
         </p>
         <div className="hero-stats">
           <div className="hero-stat">

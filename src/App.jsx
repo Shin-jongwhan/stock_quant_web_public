@@ -7,11 +7,14 @@ import Contact from './components/Contact.jsx'
 import Footer from './components/Footer.jsx'
 import ManualPage from './components/ManualPage.jsx'
 import ContactModal from './components/ContactModal.jsx'
+import LegalPage from './components/LegalPage.jsx'
 
 function parseHash() {
   const sRaw = window.location.hash.replace('#', '')
   const lsParts = sRaw.split('/')
-  const sPage = lsParts[0] === 'manual' ? 'manual' : 'home'
+  let sPage = 'home'
+  if (lsParts[0] === 'manual') sPage = 'manual'
+  else if (lsParts[0] === 'legal') sPage = 'legal'
   const sTab = lsParts[1] || 'join'
   return { sPage, sTab }
 }
@@ -23,7 +26,9 @@ function App() {
   const [blModal, setBlModal] = useState(false)
 
   useEffect(() => {
-    const sHash = sPage === 'manual' ? `#manual/${sManualTab}` : '#home'
+    let sHash = '#home'
+    if (sPage === 'manual') sHash = `#manual/${sManualTab}`
+    else if (sPage === 'legal') sHash = '#legal'
     window.history.replaceState(null, '', sHash)
   }, [sPage, sManualTab])
 
@@ -41,12 +46,6 @@ function App() {
     setBlModal(true)
   }
 
-  function handleSubscriptionManual() {
-    setBlModal(false)
-    setSPage('manual')
-    setSManualTab('subscription')
-  }
-
   function handleNavigate(sP) {
     if (sP !== 'manual') setSManualTab('join')
     setSPage(sP)
@@ -61,19 +60,23 @@ function App() {
           <Services />
           <Pricing onInquiry={handleInquiry} />
           <Contact onInquiry={handleInquiry} />
-          <Footer />
+          <Footer onNavigate={handleNavigate} />
+        </>
+      ) : sPage === 'manual' ? (
+        <>
+          <ManualPage sInitTab={sManualTab} />
+          <Footer onNavigate={handleNavigate} />
         </>
       ) : (
         <>
-          <ManualPage sInitTab={sManualTab} />
-          <Footer />
+          <LegalPage onNavigate={handleNavigate} />
+          <Footer onNavigate={handleNavigate} />
         </>
       )}
       {blModal && (
         <ContactModal
           onClose={() => setBlModal(false)}
           onNavigate={handleNavigate}
-          onSubscription={handleSubscriptionManual}
         />
       )}
     </div>

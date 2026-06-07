@@ -1,11 +1,9 @@
 import './Pricing.css'
+import { CONTACT_EMAIL } from '../constants'
 
 const plans = [
   {
     name: '주식 알람',
-    price: 9000,
-    discountPrice: 1800,
-    unit: '월',
     features: [
       '관심 종목 알람 등록',
       '목표가 도달 텔레그램 알림',
@@ -15,9 +13,6 @@ const plans = [
   },
   {
     name: 'AI 매수 후보 추천',
-    price: 39000,
-    discountPrice: 7800,
-    unit: '월',
     features: [
       '매일 AI 분석 결과 수신',
       '확률 기반 종목 자동 선별',
@@ -27,21 +22,17 @@ const plans = [
   },
 ]
 
-function formatPrice(n) {
-  return n.toLocaleString('ko-KR')
-}
-
 function Pricing({ onInquiry }) {
   return (
     <section className="pricing" id="pricing">
       <div className="container">
         <h2 className="section-title">
-          <span>요금제</span>
+          <span>이용 안내</span>
         </h2>
-        <p className="pricing-note">첫 달 <strong>80% 할인</strong> 이벤트 진행 중!</p>
+        <p className="pricing-note"><strong>베타 테스트 기간</strong> — 모든 서비스 현재 무료 운영 중!</p>
         <div className="pricing-inquiry">
-          현재 사업 검증 단계로, 결제 시스템은 서비스가 커지면 연동할 계획입니다.<br />
-          이용을 원하시면 <a href="mailto:stockop123@naver.com">stockop123@naver.com</a>으로 문의해 주세요.
+          텔레그램 봇을 등록하시면 순차적으로 승인해 드립니다.<br />
+          문의사항은 <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>으로 연락해 주세요.
         </div>
         <div className="pricing-grid">
           {plans.map((p) => (
@@ -49,12 +40,10 @@ function Pricing({ onInquiry }) {
               {p.highlight && <div className="badge">추천</div>}
               <h3 className="plan-name">{p.name}</h3>
               <div className="plan-price-box">
-                <span className="plan-original">{formatPrice(p.price)}원</span>
                 <div className="plan-current">
-                  <span className="plan-amount">{formatPrice(p.discountPrice)}</span>
-                  <span className="plan-unit">원 / {p.unit}</span>
+                  <span className="plan-amount">무료</span>
                 </div>
-                <span className="plan-first">첫 달 한정</span>
+                <span className="plan-first">베타 기간 한정</span>
               </div>
               <ul className="plan-features">
                 {p.features.map((f) => (
@@ -65,21 +54,10 @@ function Pricing({ onInquiry }) {
                 className={`plan-cta${p.highlight ? ' primary' : ''}`}
                 onClick={onInquiry}
               >
-                가입 문의하기
+                베타 참여 신청하기
               </button>
             </div>
           ))}
-        </div>
-
-        <div className="pricing-referral">
-          <span className="pricing-referral-icon">🎁</span>
-          <div className="pricing-referral-body">
-            <strong>추천인 혜택</strong>
-            <p>
-              지인이 첫 결제를 완료하면, 추천인에게 <strong>AI 매수 후보 추천 포함 7일 무료 이용권</strong>이 자동 지급됩니다.
-              정가 기준 <strong>약 만원 상당</strong>의 혜택이며, 가입 문의 시 추천인 user_name을 함께 전달해주세요.
-            </p>
-          </div>
         </div>
       </div>
     </section>

@@ -84,6 +84,15 @@
   display: block;
 }
 
+.step-img-clickable {
+  cursor: zoom-in;
+  transition: opacity 0.18s;
+}
+
+.step-img-clickable:hover {
+  opacity: 0.8;
+}
+
 .step-body {
   padding: 32px 36px;
   display: flex;
@@ -139,6 +148,39 @@
   word-break: break-all;
 }
 
+.manual-join-notice {
+  background: #eff6ff;
+  border: 1.5px solid #3b82f6;
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 32px;
+}
+
+.manual-join-notice-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1e40af;
+  margin-bottom: 14px;
+}
+
+.manual-join-notice-list {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.manual-join-notice-list li {
+  color: #1e3a8a;
+  font-size: 0.93rem;
+  line-height: 1.75;
+}
+
+.manual-join-notice-list strong {
+  color: #1e40af;
+}
+
 .manual-caution {
   background: #fffbeb;
   border: 1.5px solid #f59e0b;
@@ -181,6 +223,64 @@
   font-size: 0.88rem;
   font-family: 'Courier New', Courier, monospace;
   color: #78350f;
+}
+
+.img-viewer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  cursor: zoom-out;
+  animation: viewer-backdrop-in 0.5s ease forwards;
+}
+
+.img-viewer-backdrop.closing {
+  animation: viewer-backdrop-out 0.45s ease forwards;
+}
+
+.img-viewer-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: viewer-frame-in 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+.img-viewer-backdrop.closing .img-viewer-frame {
+  animation: viewer-frame-out 0.45s ease forwards;
+}
+
+.img-viewer-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  cursor: default;
+  transition: transform 0.12s ease;
+  display: block;
+  user-select: none;
+}
+
+@keyframes viewer-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes viewer-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes viewer-frame-in {
+  from { opacity: 0; transform: scale(0.75); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes viewer-frame-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.75); }
 }
 
 .mail-template {

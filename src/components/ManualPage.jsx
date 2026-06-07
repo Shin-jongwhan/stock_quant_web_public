@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './ManualPage.css'
+import { useEscapeKey } from '../hooks/useEscapeKey'
+import { CONTACT_EMAIL } from '../constants'
 
 const BASE = import.meta.env.BASE_URL
 
@@ -56,7 +58,9 @@ const lsJoinSteps = [
       'stock_quant_join_bot 채팅창에 아래 형식으로 입력합니다.',
       '/start <BotFather 토큰> <원하는 user_name>',
       '예시: /start 1234567890:AAF... 홍길동',
-      'BotFather에서 복사한 토큰을 그대로 붙여넣고 한 칸 띄운 후 원하는 사용자명을 입력합니다. 등록 완료 후 관리자 승인이 이루어지면 내 봇을 통해 알람 서비스를 이용할 수 있습니다.',
+      'BotFather에서 복사한 토큰을 그대로 붙여넣고 한 칸 띄운 후 원하는 사용자명을 입력합니다.',
+      '등록 메시지 전송 후 수 분 내 응답이 없으면, 관리자가 자리를 비운 상태입니다. 나중에 다시 시도해주세요.',
+      '응답 가능 시간: 평일 오전 8시 ~ 오후 8시 (KST) 기준으로 확인하고 있습니다.',
     ],
   },
 ]
@@ -198,6 +202,20 @@ const lsSubscriptionSteps = [
   },
 ]
 
+function JoinNoticeBox() {
+  return (
+    <div className="manual-join-notice">
+      <div className="manual-join-notice-title">📢 가입 응답 시간 안내</div>
+      <ul className="manual-join-notice-list">
+        <li>가입 봇(<strong>stock_quant_join_bot</strong>)에 메시지를 보낸 후 <strong>수 분 내 응답이 없으면</strong> 관리자가 자리를 비운 상태입니다. 나중에 다시 시도해주세요.</li>
+        <li>응답 가능 시간: <strong>평일 오전 8시 ~ 오후 8시 (KST)</strong> 기준이며, 상황에 따라 변동될 수 있습니다.</li>
+        <li>서버는 <strong>상시 운영되지 않으며</strong>, 점검·재시작 등으로 일시적으로 서비스가 중단될 수 있습니다.</li>
+      </ul>
+    </div>
+  )
+}
+
+
 function CautionBox() {
   return (
     <div className="manual-caution">
@@ -230,14 +248,14 @@ function MailTemplate() {
     setTimeout(() => setBlCopied(false), 2000)
   }
 
-  const sMailto = `mailto:stockop123@naver.com?subject=[Stock Quant 구독 문의]&body=${encodeURIComponent(sMailTemplate)}`
+  const sMailto = `mailto:${CONTACT_EMAIL}?subject=[Stock Quant 구독 문의]&body=${encodeURIComponent(sMailTemplate)}`
 
   return (
     <div className="mail-template">
       <div className="mail-template-header">
         <h3 className="mail-template-title">📧 이메일 문의 양식</h3>
         <p className="mail-template-note">
-          아래 양식을 복사한 뒤 빈칸을 채워 <strong>stockop123@naver.com</strong>으로 보내주세요.<br />
+          아래 양식을 복사한 뒤 빈칸을 채워 <strong>{CONTACT_EMAIL}</strong>으로 보내주세요.<br />
           <strong>구독 요청 개월은 참고용</strong>이며, 실제 등록 개월 수는 입금액을 기준으로 산정됩니다.<br />
           입금 확인 후 맞는 개월 수로 등록해드립니다.
         </p>
@@ -256,12 +274,58 @@ function MailTemplate() {
 }
 
 
-function StepCard({ nIdx, dicStep }) {
+function ImageViewer({ sSrc, sAlt, onClose }) {
+  const [nScale, setNScale] = useState(1)
+  const [blClosing, setBlClosing] = useState(false)
+  const cClosed = useRef(false)
+
+  function triggerClose() {
+    if (cClosed.current) return
+    cClosed.current = true
+    setNScale(1)
+    setBlClosing(true)
+    setTimeout(onClose, 450)
+  }
+
+  useEscapeKey(triggerClose)
+
+  useEffect(() => {
+    const onWheel = (e) => {
+      if (!e.ctrlKey) return
+      e.preventDefault()
+      setNScale(fl => Math.min(5, Math.max(0.5, fl + (e.deltaY < 0 ? 0.15 : -0.15))))
+    }
+    document.addEventListener('wheel', onWheel, { passive: false })
+    return () => document.removeEventListener('wheel', onWheel)
+  }, [])
+
+  return (
+    <div className={`img-viewer-backdrop${blClosing ? ' closing' : ''}`} onClick={triggerClose}>
+      <div className="img-viewer-frame" onClick={e => e.stopPropagation()}>
+        <img
+          className="img-viewer-img"
+          src={sSrc}
+          alt={sAlt}
+          style={{ transform: `scale(${nScale})` }}
+        />
+      </div>
+    </div>
+  )
+}
+
+
+function StepCard({ nIdx, dicStep, onImgClick }) {
   const lsCode = ['/', '예시']
   return (
     <div className="manual-step">
       <div className="step-img-wrap">
-        <img src={dicStep.img} alt={dicStep.sTitle} loading="lazy" />
+        <img
+          src={dicStep.img}
+          alt={dicStep.sTitle}
+          loading="lazy"
+          className="step-img-clickable"
+          onClick={() => onImgClick(dicStep.img, dicStep.sTitle)}
+        />
       </div>
       <div className="step-body">
         <span className="step-num">{String(nIdx + 1).padStart(2, '0')}</span>
@@ -282,6 +346,7 @@ function StepCard({ nIdx, dicStep }) {
 
 function ManualPage({ sInitTab = 'join' }) {
   const [sTab, setSTab] = useState(sInitTab)
+  const [dicViewer, setDicViewer] = useState(null)
 
   useEffect(() => {
     setSTab(sInitTab)
@@ -316,16 +381,30 @@ function ManualPage({ sInitTab = 'join' }) {
           </button>
         </div>
 
+        {sTab === 'join' && <JoinNoticeBox />}
         {sTab === 'subscription' && <CautionBox />}
 
         <div className="manual-steps">
           {lsSteps.map((dicStep, nIdx) => (
-            <StepCard key={nIdx} nIdx={nIdx} dicStep={dicStep} />
+            <StepCard
+              key={nIdx}
+              nIdx={nIdx}
+              dicStep={dicStep}
+              onImgClick={(sSrc, sAlt) => setDicViewer({ sSrc, sAlt })}
+            />
           ))}
         </div>
 
         {sTab === 'subscription' && <MailTemplate />}
       </div>
+
+      {dicViewer && (
+        <ImageViewer
+          sSrc={dicViewer.sSrc}
+          sAlt={dicViewer.sAlt}
+          onClose={() => setDicViewer(null)}
+        />
+      )}
     </div>
   )
 }
